@@ -27,7 +27,8 @@ class Sampler(object):
         return Y_pred, Y_true
 
     def sample(self):
-        Y_pred, Y_true = self.permute(self.Y_pred.astype(np.float32), self.Y_true.astype(np.float32))
+        #Y_pred, Y_true = self.permute(self.Y_pred.astype(np.float32), self.Y_true.astype(np.float32))
+        Y_pred, Y_true = self.permute(self.Y_pred.astype(np.float32), self.Y_true)
         self.reset(Y_pred, Y_true)
 
         LB = -10000000
@@ -88,7 +89,8 @@ class ControlCovariateSampler(Sampler):
         self.c = -1 * self.cov / self.var_t
 
     def reestimate(self, Y_pred, Y_true, nb_samples):
-        yt_samp = Y_true[0:nb_samples]
+        #yt_samp = Y_true[0:nb_samples]
+        yt_samp = Y_true[0:nb_samples].astype(np.float32)
         yp_samp = Y_pred[0:nb_samples]
         self.cov = np.cov(yt_samp, yp_samp)[0][1]
         self.c = -1 * self.cov / self.var_t
@@ -125,3 +127,4 @@ class MultiControlCovariateSampler(ControlCovariateSampler):
 
     def _get_yp(self, Y_true, Y_pred, nb_samples):
         return self.reg.predict(Y_pred[nb_samples:nb_samples + 1])[0]
+
